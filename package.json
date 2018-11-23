@@ -11,5 +11,10 @@
     "test-coverage"
   ],
   "author": "Comandeer",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@babel/parser": "^7.1.6",
+    "@babel/traverse": "^7.1.6",
+    "@babel/types": "^7.1.6"
+  }
 }
