@@ -1,0 +1,15 @@
+{
+  "name": "coverage-sample",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Simple PoC of test coverage tool.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "test-coverage"
+  ],
+  "author": "Comandeer",
+  "license": "MIT"
+}
