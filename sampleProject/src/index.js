@@ -1,5 +1,12 @@
 function main() {
-	console.log( 'Hello world!' );
+	console.log( 'Hello, world!' );
 }
 
-module.exports = main;
+function notMain() {
+	console.log( 'Whatever' );
+}
+
+module.exports = {
+	main,
+	notMain
+};

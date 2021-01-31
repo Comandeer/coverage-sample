@@ -4,6 +4,7 @@
   "private": true,
   "description": "Simple PoC of test coverage tool.",
   "main": "index.js",
+  "bin": "index.js",
   "scripts": {
     "start": "node index.js",
     "test": "eslint src/**/*.js index.js"
@@ -14,13 +15,12 @@
   "author": "Comandeer",
   "license": "MIT",
   "dependencies": {
-    "@babel/generator": "^7.1.6",
-    "@babel/parser": "^7.1.6",
-    "@babel/traverse": "^7.1.6",
-    "@babel/types": "^7.1.6"
+    "@babel/core": "^7.12.10",
+    "@babel/types": "^7.12.12",
+    "pirates": "^4.0.1"
   },
   "devDependencies": {
-    "@comandeer/eslint-config": "^0.1.0",
-    "eslint": "^5.9.0"
+    "@comandeer/eslint-config": "^0.2.2",
+    "eslint": "^7.19.0"
   }
 }

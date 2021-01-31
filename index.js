@@ -1,6 +1,16 @@
-const instrument = require( './src/instrumenter.js' );
-const { readFileSync } = require( 'fs' );
+#!/usr/bin/env node
 
-const result = instrument( readFileSync( 'sampleProject/src/index.js', 'utf8' ), 'sampleProject/src/index.js' );
+const { resolve: resolvePath } = require( 'path' );
+const addHook = require( './src/hook' );
+const instrument = require( './src/instrumenter' );
+const report = require( './src/reporter' );
 
-console.log( result ); // eslint-disable-line no-console
+global.__coverage__ = {};
+
+addHook( instrument );
+
+const entryPath = resolvePath( process.cwd(), process.argv[ 2 ] );
+
+require( entryPath );
+
+report( global.__coverage__ );

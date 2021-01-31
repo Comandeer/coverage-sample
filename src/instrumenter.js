@@ -1,55 +1,62 @@
-const { parse } = require( '@babel/parser' );
-const { default: traverse } = require( '@babel/traverse' );
 const {
 	expressionStatement,
 	identifier,
 	stringLiteral,
+	numericLiteral,
 	memberExpression,
 	updateExpression } = require( '@babel/types' );
-const { default: generate } = require( '@babel/generator' );
 
-function createCounter( fileName ) {
+const { transformSync } = require( '@babel/core' );
+
+function instrument( code, filePath ) {
+	const functions = [];
+
+	const instrumentedCode = transformSync( code, {
+		plugins: [
+			function codeCoverage() {
+				return {
+					visitor: {
+						FunctionDeclaration( path ) {
+							const counter = createCounter( filePath, functions.length );
+
+							path.get( 'body' ).unshiftContainer( 'body', counter );
+							functions.push( 0 );
+						}
+					}
+				};
+			}
+		]
+	} );
+
+	global.__coverage__[ filePath ] = {
+		functions
+	};
+
+	return instrumentedCode.code;
+}
+
+function createCounter( fileName, index ) {
 	return expressionStatement(
 		updateExpression( '++',
 			memberExpression(
 				memberExpression(
-					identifier( '__coverage__' ),
-					stringLiteral( fileName ),
-					true
+					memberExpression(
+						memberExpression(
+							identifier( 'global' ),
+							identifier( '__coverage__' ),
+							false
+						),
+						stringLiteral( fileName ),
+						true
+					),
+					identifier( 'functions' ),
+					false
 				),
-				identifier( 'covered' ),
-				false
+				numericLiteral( index ),
+				true
 			)
 		)
 	);
-}
-
-function instrument( code, fileName ) {
-	const ast = parse( code );
-	const lines = [];
-
-	traverse( ast, {
-		enter( path ) {
-			const { node: { loc } } = path;
-
-			if ( !loc || !path.parentPath || lines.includes( loc.start.line ) ) {
-				return;
-			}
-
-			path.insertBefore( createCounter( fileName ) );
-			lines.push( loc.start.line );
-		}
-	} );
-
-	const instrumentedCode = generate( ast, {
-		compact: true
-	} );
-
-	return {
-		totalLines: lines.length,
-		covered: 0,
-		code: instrumentedCode
-	};
 }
 
 module.exports = instrument;

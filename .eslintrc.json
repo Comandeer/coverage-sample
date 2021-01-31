@@ -1,3 +1,4 @@
 {
-	"extends": "@comandeer/eslint-config"
+	"extends": "@comandeer/eslint-config",
+	"no-console": 0
 }
